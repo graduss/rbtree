@@ -20,8 +20,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="RBNode.cpp" />
-		<Unit filename="RBNode.h" />
+		<Unit filename="Node.cpp" />
+		<Unit filename="Node.h" />
 		<Unit filename="RBTree.cpp" />
 		<Unit filename="RBTree.h" />
 		<Unit filename="main.cpp" />
