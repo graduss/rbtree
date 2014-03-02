@@ -11,14 +11,14 @@ class RBTree
         RBTree();
         virtual ~RBTree();
 
-        void leftRotate(const Node* n);
-        void rightRotate(const Node* x);
+        void leftRotate(Node* n);
+        void rightRotate(Node* x);
 
-        Node* insert(const Node* n);
+        Node* insert(Node* n);
     protected:
     private:
         Node* root;
-        Node* btInsert(const Node* n);
+        Node* btInsert(Node* n);
 };
 
 };

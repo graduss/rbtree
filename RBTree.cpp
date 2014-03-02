@@ -12,7 +12,7 @@ RBTree::~RBTree() {
     }
 }
 
-void RBTree::leftRotate(const Node* x){
+void RBTree::leftRotate(Node* x){
     Node* y = x->r;
     x->r = y->l;
 
@@ -27,7 +27,7 @@ void RBTree::leftRotate(const Node* x){
     x->p = y;
 }
 
-void RBTree::rightRotate(const Node* x){
+void RBTree::rightRotate(Node* x){
     Node* y = x->l;
 
     x->l = y->r;
@@ -43,7 +43,7 @@ void RBTree::rightRotate(const Node* x){
     x->p = y;
 }
 
-Node* RBTree::btInsert(const Node* n){
+Node* RBTree::btInsert(Node* n){
     Node* root = this->root;
     Node* x;
 
@@ -61,12 +61,12 @@ Node* RBTree::btInsert(const Node* n){
     return n;
 }
 
-Node* RBTree::insert(const Node* x){
+Node* RBTree::insert(Node* x){
     btInsert(x);
     x->red = true;
 
     Node* y;
-    while (x !== root && x->p->red){
+    while (x != root && x->p->red){
         if(x->p == x->p->p->l){ // родитель является левым ребенком.
             y = x->p->p->r;
             if(y && y->red){ // случей 1 (I)
@@ -80,15 +80,15 @@ Node* RBTree::insert(const Node* x){
                     leftRotate(x);
                 }
                 x->p->red = false; // случей 3 (I)
-                x->p->p->reg = true;
+                x->p->p->red = true;
                 rightRotate(x->p->p);
             }
         }else{ // родитель является правым ребенком.
             y = x->p->p->l;
-            if(Y && y->red){ // случей 1 (II)
+            if(y && y->red){ // случей 1 (II)
                 x->p->red = false;
                 y->red = false;
-                x->p->p = true;
+                x->p->p->red = true;
                 x = x->p->p;
             }else{
                 if(x == x->p->r){ // случей 2 (II) -> случей 3 (II)
