@@ -23,7 +23,7 @@ class RBTree
     private:
         Node* root;
         Node* btInsert(Node* n);
-        void rmoveFixup(Node, x);
+        void rmoveFixup(Node* x);
 };
 
 };

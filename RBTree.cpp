@@ -107,14 +107,19 @@ Node* RBTree::insert(Node* x){
 Node* RBTree::remove(Node *n){
     Node* x;
     Node* y;
+    bool imaginaryX = false;
 
     if(n->l == 0 && n->r == 0) y = n;
-    else successor(n);
+    else y = successor(n);
 
     if(y->l) x = y->l;
     else x = y->r;
 
-    if(x) x->p = y->p;
+    if(!x) {
+        x = new Node;
+        imaginaryX = true;
+    }
+    x->p = y->p;
 
     if(y->p == 0) root = x;
     else if (y == y->p->l) y->p->l = x;
@@ -122,7 +127,16 @@ Node* RBTree::remove(Node *n){
 
     if (y != n) n->key = y->key;
 
-    if(!y->red) rmoveFixup(x);
+    if(!y->red) {
+        rmoveFixup(x);
+
+        if (imaginaryX){
+            if(x == x->p->l) x->p->l = 0;
+            else x->p->r = 0;
+            delete x;
+            imaginaryX = false;
+        }
+    }
 
     return y;
 }
@@ -183,6 +197,13 @@ Node* RBTree::max(Node* root) const {
     return n;
 }
 
-void RBTree::rmoveFixup(Node, x){}
+void RBTree::rmoveFixup(Node* x){
+    Node* w;
+    while (x != root && !x->red){
+        if (x == x->p->l){
+            w = x->p->r;
+        }
+    }
+}
 
 }
