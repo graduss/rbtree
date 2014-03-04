@@ -102,6 +102,8 @@ Node* RBTree::insert(Node* x){
         }
     }
     root->red = false;
+
+    return x;
 }
 
 Node* RBTree::remove(Node *n){
@@ -202,6 +204,19 @@ void RBTree::rmoveFixup(Node* x){
     while (x != root && !x->red){
         if (x == x->p->l){
             w = x->p->r;
+            if (w->red){
+                w->red = false;
+                w->p->red = true;
+                leftRotate(x->p);
+                w= x->p->r;
+            }
+
+            if (!w->l->red && !w->r->red) {
+                w->red = true;
+                x = x->p;
+            }else if(!w->r->red){
+
+            }
         }
     }
 }

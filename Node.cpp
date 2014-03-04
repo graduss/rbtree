@@ -2,6 +2,14 @@
 
 namespace rbt {
 
+Node::Node(const Node &n){
+    key = n.key;
+    l = n.l;
+    r = n.r;
+    p = n.p;
+    red = n.red;
+}
+
 Node::~Node(){
     key = 0;
     red = false;

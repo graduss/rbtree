@@ -8,7 +8,9 @@ struct Node {
     bool red;
     Node *l, *r, *p;
 
-    Node(int key): key(key), l(0), r(0), p(0), red(false) {}
+    Node(int key): key(key), red(false), l(0), r(0), p(0) {}
+    Node(): key(0), red(false), l(0), r(0), p(0) {}
+    Node(const Node &n);
     ~Node();
 };
 
