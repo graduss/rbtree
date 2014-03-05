@@ -204,19 +204,52 @@ void RBTree::rmoveFixup(Node* x){
     while (x != root && !x->red){
         if (x == x->p->l){
             w = x->p->r;
-            if (w->red){
+            if (w->red){ // случей 1 (I)
                 w->red = false;
                 w->p->red = true;
                 leftRotate(x->p);
                 w= x->p->r;
             }
 
-            if (!w->l->red && !w->r->red) {
+            if (!w->l->red && !w->r->red) { // случей 2 (I)
                 w->red = true;
                 x = x->p;
-            }else if(!w->r->red){
-
+            }else if(!w->r->red){ // случей 3 (I)
+                w->l->red = false;
+                w->red = true;
+                rightRotate(w);
+                w = x->p->r;
             }
+
+            w->red = x->p->red; // случей 4 (I)
+            x->p->red = false;
+            w->r->red = false;
+            leftRotate(x->p);
+            x = root;
+        }else{
+            w = x->p->l;
+            if(w->red){ // случей 1 (II)
+                w->red = false;
+                w->p->red = true;
+                rightRotate(x->p);
+                w = x->p->l;
+            }
+
+            if(!w->l->red && !w->r->red){ // случей 2 (II)
+                w->red = true;
+                x = x->p;
+            }else if (!w->l->red) { // случей 3 (II)
+                w->r->red = false;
+                w->red = true;
+                leftRotate(w);
+                w = x->p->l;
+            }
+
+            w->red = x->p->red; // случей 4 (II)
+            x->p->red = false;
+            w->l->red = false;
+            rightRotate(x->p);
+            x = root;
         }
     }
 }
