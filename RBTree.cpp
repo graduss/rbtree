@@ -29,7 +29,6 @@ void RBTree::leftRotate(Node* x){
 
 void RBTree::rightRotate(Node* x){
     Node* y = x->l;
-
     x->l = y->r;
     if(y->r) y->r->p = x;
 
@@ -45,7 +44,7 @@ void RBTree::rightRotate(Node* x){
 
 Node* RBTree::btInsert(Node* n){
     Node* root = this->root;
-    Node* x;
+    Node* x = 0;
 
     while(root){
         x = root;
@@ -54,8 +53,8 @@ Node* RBTree::btInsert(Node* n){
     }
 
     n->p = x;
-    if (x == 0) this->root = n;
-    else if (x->key > n->key) x->l = n;
+    if (!x) this->root = n;
+    else if(x->key > n->key) x->l = n;
     else x->r = n;
 
     return n;
@@ -96,8 +95,9 @@ Node* RBTree::insert(Node* x){
                     rightRotate(x);
                 }
                 x->p->red = false; // сулчей 3 (II)
-                x->p->p->red = true;
-                leftRotate(x->p->p);
+                /*x->p->p->red = true;
+                leftRotate(x->p->p);*/
+                x = root;
             }
         }
     }
@@ -252,6 +252,30 @@ void RBTree::rmoveFixup(Node* x){
             x = root;
         }
     }
+}
+
+void RBTree::inorderTreeWalk(const Node* n, int h)const {
+    if(n){
+        inorderTreeWalk(n->l, h+1);
+        for(int i = h; i>0; i--){
+            std::cout<<"->";
+        }
+        std::cout<<n->key<<" ";
+        if(n->red) std::cout<<"red"<<std::endl;
+        else std::cout<<"black"<<std::endl;
+        inorderTreeWalk(n->r, h+1);
+    }
+}
+
+void RBTree::show(){
+    inorderTreeWalk(root);
+}
+
+RBTree &RBTree::add(int key){
+    Node* n = new Node(key);
+    insert(n);
+
+    return *this;
 }
 
 }

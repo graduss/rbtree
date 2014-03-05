@@ -1,9 +1,13 @@
-#include <iostream>
+#include "RBTree.h"
 
-using namespace std;
+using namespace rbt;
+
+RBTree rb;
 
 int main()
 {
-    cout << "Hello world!" << endl;
+    rb.add(11).add(14).add(15).show();
+
+    std::cout<<"\n finish \n";
     return 0;
 }

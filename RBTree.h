@@ -1,4 +1,5 @@
 #include "Node.h"
+#include <iostream>
 
 #ifndef RBTREE_H
 #define RBTREE_H
@@ -10,6 +11,9 @@ class RBTree
     public:
         RBTree();
         virtual ~RBTree();
+
+        void show();
+        RBTree& add(int key);
 
         void leftRotate(Node* n);
         void rightRotate(Node* x);
@@ -24,6 +28,7 @@ class RBTree
         Node* root;
         Node* btInsert(Node* n);
         void rmoveFixup(Node* x);
+        void inorderTreeWalk(const Node *n, int h = 0) const;
 };
 
 };
