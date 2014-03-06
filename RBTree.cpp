@@ -90,14 +90,13 @@ Node* RBTree::insert(Node* x){
                 x->p->p->red = true;
                 x = x->p->p;
             }else{
-                if(x == x->p->r){ // случей 2 (II) -> случей 3 (II)
+                if(x == x->p->l){ // случей 2 (II) -> случей 3 (II)
                     x = x->p;
                     rightRotate(x);
                 }
                 x->p->red = false; // сулчей 3 (II)
-                /*x->p->p->red = true;
-                leftRotate(x->p->p);*/
-                x = root;
+                x->p->p->red = true;
+                leftRotate(x->p->p);
             }
         }
     }
