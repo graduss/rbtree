@@ -106,37 +106,37 @@ Node* RBTree::insert(Node* x){
 }
 
 Node* RBTree::remove(Node *n){
-    Node* x;
-    Node* y;
+    Node* x = 0;
+    Node* y = 0;
     bool imaginaryX = false;
 
-    if(n->l == 0 && n->r == 0) y = n;
+    if(n->l == 0 || n->r == 0) y = n;
     else y = successor(n);
 
     if(y->l) x = y->l;
     else x = y->r;
-
     if(!x) {
         x = new Node;
         imaginaryX = true;
     }
-    x->p = y->p;
 
+    x->p = y->p;
     if(y->p == 0) root = x;
-    else if (y == y->p->l) y->p->l = x;
-    else y->p->r = x;
+    else {
+        if (y == y->p->l) y->p->l = x;
+        else y->p->r = x;
+    }
 
     if (y != n) n->key = y->key;
 
     if(!y->red) {
         rmoveFixup(x);
-
-        if (imaginaryX){
-            if(x == x->p->l) x->p->l = 0;
-            else x->p->r = 0;
-            delete x;
-            imaginaryX = false;
-        }
+    }
+    if (imaginaryX){
+        if(x == x->p->l) x->p->l = 0;
+        else x->p->r = 0;
+        delete x;
+        imaginaryX = false;
     }
 
     return y;
@@ -268,11 +268,25 @@ void RBTree::inorderTreeWalk(const Node* n, int h)const {
 
 void RBTree::show(){
     inorderTreeWalk(root);
+    std::cout<<"************\n";
 }
 
 RBTree &RBTree::add(int key){
     Node* n = new Node(key);
     insert(n);
+
+    return *this;
+}
+
+Node* RBTree::search(int key, Node* root) const {
+    if(!root || key == root->key) return root;
+    else if (key < root->key) return search(key, root->l);
+    else return search(key, root->r);
+}
+
+RBTree& RBTree::del(int key){
+    Node* n = search(key, root);
+    if(n) remove(n);
 
     return *this;
 }

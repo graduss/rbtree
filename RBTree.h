@@ -14,6 +14,7 @@ class RBTree
 
         void show();
         RBTree& add(int key);
+        RBTree& del(int key);
 
         void leftRotate(Node* n);
         void rightRotate(Node* x);
@@ -24,6 +25,7 @@ class RBTree
         Node* predecessor(Node* n) const;
         Node* min(Node* root = 0) const;
         Node* max(Node* root = 0) const;
+        Node* search(int key, Node* root) const;
     private:
         Node* root;
         Node* btInsert(Node* n);
