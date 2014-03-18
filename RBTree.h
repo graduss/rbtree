@@ -95,7 +95,6 @@ void RBTree<Data>::insert(SPointer<Item>& x){
                 x->p->p->red = true;
                 leftRotate(x->p->p);
             }
-            x = root;
         }
     }
     root->red = false;
@@ -125,14 +124,12 @@ void RBTree<Data>::leftRotate(SPointer<Item> x){
     x->r = y->l;
     if(y->l) y->l->p = x;
 
-    if(!x->p) {
-        root = y;
-    }else if(x == x->p->l) {
-        x->p->l = y;
-    }else {
-        x->p->r = y;
-    }
     y->p = x->p;
+
+    if(!x->p) root = y;
+    else if(x == x->p->l) x->p->l = y;
+    else x->p->r = y;
+
     y->l = x;
     x->p = y;
 }
