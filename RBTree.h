@@ -18,8 +18,8 @@ public:
 
     Data& successor(const Data& key) const;
     Data& predecessor(const Data& key) const;
-    Data& min(const Data& key) const;
-    Data& max(const Data& key) const;
+    Data& min() const;
+    Data& max() const;
 
     /********** testing **************/
     void show() const;
@@ -41,12 +41,116 @@ private:
     void btInsert(SPointer<Item>& x);
     void insert(SPointer<Item>& x);
 
+    SPointer<Item> _min(const SPointer<Item>& root) const;
+    SPointer<Item> _max(const SPointer<Item>& root) const;
+    SPointer<Item>& _successor(SPointer<Item> node) const;
+    SPointer<Item>& _predecessor(SPointer<Item> node) const;
+
+    SPointer<Item> search(const Data& key, const SPointer<Item>& root) const;
+
     /******* testing ***********/
     void inorderTreeWalk(const SPointer<Item>& n, int h = 0)const;
 };
 /*******
 ** RBTree
 **/
+template<class Data>
+Data& RBTree<Data>::max() const {
+    if(!root) throw "Is empty!";
+    else return _max(root)->key;
+}
+
+template<class Data>
+Data& RBTree<Data>::min() const {
+    if(!root) throw "Is empty!";
+    else return _min(root)->key;
+}
+
+template<class Data>
+Data& RBTree<Data>::successor(const Data& key) const {
+    SPointer<Item> node = search(key, root);
+    if(!node) throw "Not found";
+    else {
+        SPointer<Item> sucnode = _successor(node);
+        if(!sucnode) throw "the node is extrim";
+        else return sucnode->key;
+    }
+}
+
+template<class Data>
+Data& RBTree<Data>::predecessor(const Data& key) const {
+    SPointer<Item> node = search(key, root);
+    if(!node) throw "Not found";
+    else {
+        SPointer<Item> psucnode = _predecessor(node);
+        if(!psucnode) throw "the node is extrim";
+        else return psucnode->key;
+    }
+}
+
+template<class Data>
+SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_predecessor(SPointer<Item> node) const {
+    SPointer<Item> ans;
+
+    if(node->l){
+        ans = _max(node->r);
+    }else{
+        ans = node->p;
+        while(ans && node==ans->l){
+            node = ans;
+            ans = ans->p;
+        }
+    }
+
+    return ans;
+}
+
+template<class Data>
+SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_successor(SPointer<Item> node) const {
+    SPointer<Item> ans;
+
+    if(node->r){
+        ans = _min(node->r);
+    }else{
+        ans = node->p;
+        while(ans && node == ans->r){
+            node = ans;
+            ans = ans->p;
+        }
+    }
+
+    return ans;
+}
+
+template<class Data>
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_max(const SPointer<Item>& root) const {
+    SPointer<Item> n = root;
+
+    while(n->r){
+        n = n->r;
+    }
+
+    return n;
+}
+
+template<class Data>
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_min(const SPointer<Item>& root) const {
+    SPointer<Item> n = root;
+
+    while(n->l){
+        n = n->l;
+    }
+
+    return n;
+}
+
+template<class Data>
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::search(const Data& key, const SPointer<Item>& root) const {
+    if(!root || key == root->key) return root;
+    else if (key < root->key) return search(key, root->l);
+    else return search(key, root->r);
+}
+
 template<class Data>
 RBTree<Data>& RBTree<Data>::add(const Data& key){
     SPointer<Item> n = new Item(key);
@@ -153,7 +257,7 @@ void RBTree<Data>::rightRotate(SPointer<Item> x){
 
 template<class Data>
 RBTree<Data>::~RBTree(){
-    if(root) delete &root;
+    if(root) root = 0;
 }
 /**************** testting **********************************/
 template<class Data>
@@ -189,6 +293,8 @@ RBTree<Data>::Item::~Item(){
     if(l) delete &l;
     if(r) delete &r;
     p = l = r = 0;
+    red = false;
+    key = 0;
 }
 
 template<class Data>
@@ -200,33 +306,6 @@ RBTree<Data>::Item::Item(const Item& i){
     p = i.p;
 }
 /************************************************************/
-/*class RBTree
-{
-    public:
-        RBTree();
-        virtual ~RBTree();
-
-        void show();
-        RBTree& add(int key);
-        RBTree& del(int key);
-
-        void leftRotate(Node* n);
-        void rightRotate(Node* x);
-
-        Node* insert(Node* n);
-        Node* remove(Node* n);
-        Node* successor(Node* n) const;
-        Node* predecessor(Node* n) const;
-        Node* min(Node* root = 0) const;
-        Node* max(Node* root = 0) const;
-        Node* search(int key, Node* root) const;
-    private:
-        Node* root;
-        Node* btInsert(Node* n);
-        void rmoveFixup(Node* x);
-        void inorderTreeWalk(const Node *n, int h = 0) const;
-};*/
-
 };
 
 #endif // RBTREE_H
