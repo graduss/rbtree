@@ -55,6 +55,12 @@ private:
 ** RBTree
 **/
 template<class Data>
+RBTree<Dtat>& RBTree<Dtat>::del(const Data key){
+    SPointer<Item> node = search(key);
+
+}
+
+template<class Data>
 Data& RBTree<Data>::max() const {
     if(!root) throw "Is empty!";
     else return _max(root)->key;
