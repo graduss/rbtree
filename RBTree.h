@@ -32,6 +32,7 @@ private:
 
         Item(const Data& k): key(k), red(false), l(0), r(0), p(0) {}
         Item(const Item& i);
+        Item();
         ~Item();
     };
     SPointer<Item> root;
@@ -40,6 +41,8 @@ private:
     void rightRotate(SPointer<Item> x);
     void btInsert(SPointer<Item>& x);
     void insert(SPointer<Item>& x);
+    void remove(SPointer<Item>& x);
+    void rmoveFixup(SPointer<Item>& node);
 
     SPointer<Item> _min(const SPointer<Item>& root) const;
     SPointer<Item> _max(const SPointer<Item>& root) const;
@@ -54,6 +57,98 @@ private:
 /*******
 ** RBTree
 **/
+template<class Data>
+void RBTree<Data>::remove(SPointer<Item>& node){
+    SPointer<Item> x, y;
+    bool imaginaryX = false;
+
+    if(node->l == 0 || node->r == 0) y = node;
+    else y = _successor(node);
+
+    if(y->l) x = y->l;
+    else x = y->r;
+    if(!x) {
+        x = new Item;
+        imaginaryX = true;
+    }
+
+    x->p = y->p;
+    if(y->p == 0) root = x;
+    else {
+        if (y == y->p->l) y->p->l = x;
+        else y->p->r = x;
+    }
+
+    if (y != node) node->key = y->key;
+
+    if(!y->red) {
+        rmoveFixup(x);
+    }
+    if (imaginaryX){
+        if(x == x->p->l) x->p->l = 0;
+        else x->p->r = 0;
+        x = 0;
+        imaginaryX = false;
+    }
+}
+
+template<class Data>
+void RBTree<Data>::rmoveFixup(SPointer<Item>& x){
+    SPointer<Item> w;
+
+    while (x != root && !x->red){
+        if (x == x->p->l){
+            w = x->p->r;
+            if (w->red){ // случей 1 (I)
+                w->red = false;
+                w->p->red = true;
+                leftRotate(x->p);
+                w = x->p->r;
+            }
+
+            if (!w->l->red && !w->r->red) { // случей 2 (I)
+                w->red = true;
+                x = x->p;
+            }else if(!w->r->red){ // случей 3 (I)
+                w->l->red = false;
+                w->red = true;
+                rightRotate(w);
+                w = x->p->r;
+            }
+
+            w->red = x->p->red; // случей 4 (I)
+            x->p->red = false;
+            w->r->red = false;
+            leftRotate(x->p);
+            x = root;
+        }else{
+            w = x->p->l;
+            if(w->red){ // случей 1 (II)
+                w->red = false;
+                w->p->red = true;
+                rightRotate(x->p);
+                w = x->p->l;
+            }
+
+            if(!w->l->red && !w->r->red){ // случей 2 (II)
+                w->red = true;
+                x = x->p;
+            }else if (!w->l->red) { // случей 3 (II)
+                w->r->red = false;
+                w->red = true;
+                leftRotate(w);
+                w = x->p->l;
+            }
+
+            w->red = x->p->red; // случей 4 (II)
+            x->p->red = false;
+            w->l->red = false;
+            rightRotate(x->p);
+            x = root;
+        }
+    }
+}
+
 template<class Data>
 Data& RBTree<Data>::max() const {
     if(!root) throw "Is empty!";
@@ -283,6 +378,12 @@ void RBTree<Data>::show() const {
 /*******
 **  Item
 **/
+template<class Data>
+RBTree<Data>::Item::Item(){
+    red = false;
+    l = r = p = 0;
+}
+
 template <class Data>
 RBTree<Data>::Item::~Item(){
     if(p){
