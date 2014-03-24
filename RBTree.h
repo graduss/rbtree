@@ -39,17 +39,17 @@ private:
 
     void leftRotate(SPointer<Item> x);
     void rightRotate(SPointer<Item> x);
-    void btInsert(SPointer<Item>& x);
-    void insert(SPointer<Item>& x);
-    void remove(SPointer<Item>& x);
-    void rmoveFixup(SPointer<Item>& node);
+    void btInsert(SPointer<Item> x);
+    void insert(SPointer<Item> x);
+    void remove(SPointer<Item> x);
+    void rmoveFixup(SPointer<Item> node);
 
-    SPointer<Item> _min(const SPointer<Item>& root) const;
-    SPointer<Item> _max(const SPointer<Item>& root) const;
-    SPointer<Item>& _successor(SPointer<Item> node) const;
-    SPointer<Item>& _predecessor(SPointer<Item> node) const;
+    SPointer<Item> _min(const SPointer<Item> root) const;
+    SPointer<Item> _max(const SPointer<Item> root) const;
+    SPointer<Item> _successor(SPointer<Item> node) const;
+    SPointer<Item> _predecessor(SPointer<Item> node) const;
 
-    SPointer<Item> search(const Data& key, const SPointer<Item>& root) const;
+    SPointer<Item> search(const Data& key, SPointer<Item> root) const;
 
     /******* testing ***********/
     void inorderTreeWalk(const SPointer<Item>& n, int h = 0)const;
@@ -58,16 +58,20 @@ private:
 ** RBTree
 **/
 template<class Data>
-RBTree<Dtat>& RBTree<Dtat>::del(const Data key){
-    SPointer<Item> node = search(key);
+RBTree<Data>& RBTree<Data>::del(const Data& key){
+    SPointer<Item> node = search(key, root);
+    if(!node) throw "Nod found";
+    remove(node);
+
+    return *this;
 }
 
 template<class Data>
-void RBTree<Data>::remove(SPointer<Item>& node){
+void RBTree<Data>::remove(SPointer<Item> node){
     SPointer<Item> x, y;
     bool imaginaryX = false;
 
-    if(node->l == 0 || node->r == 0) y = node;
+    if(!node->l || !node->r) y = node;
     else y = _successor(node);
 
     if(y->l) x = y->l;
@@ -78,7 +82,7 @@ void RBTree<Data>::remove(SPointer<Item>& node){
     }
 
     x->p = y->p;
-    if(y->p == 0) root = x;
+    if(!y->p) root = x;
     else {
         if (y == y->p->l) y->p->l = x;
         else y->p->r = x;
@@ -93,12 +97,11 @@ void RBTree<Data>::remove(SPointer<Item>& node){
         if(x == x->p->l) x->p->l = 0;
         else x->p->r = 0;
         x = 0;
-        imaginaryX = false;
     }
 }
 
 template<class Data>
-void RBTree<Data>::rmoveFixup(SPointer<Item>& x){
+void RBTree<Data>::rmoveFixup(SPointer<Item> x){
     SPointer<Item> w;
 
     while (x != root && !x->red){
@@ -189,7 +192,7 @@ Data& RBTree<Data>::predecessor(const Data& key) const {
 }
 
 template<class Data>
-SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_predecessor(SPointer<Item> node) const {
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_predecessor(SPointer<Item> node) const {
     SPointer<Item> ans;
 
     if(node->l){
@@ -206,7 +209,7 @@ SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_predecessor(SPointer<Item>
 }
 
 template<class Data>
-SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_successor(SPointer<Item> node) const {
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_successor(SPointer<Item> node) const {
     SPointer<Item> ans;
 
     if(node->r){
@@ -223,7 +226,7 @@ SPointer<typename RBTree<Data>::Item>& RBTree<Data>::_successor(SPointer<Item> n
 }
 
 template<class Data>
-SPointer<typename RBTree<Data>::Item> RBTree<Data>::_max(const SPointer<Item>& root) const {
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_max(const SPointer<Item> root) const {
     SPointer<Item> n = root;
 
     while(n->r){
@@ -234,7 +237,7 @@ SPointer<typename RBTree<Data>::Item> RBTree<Data>::_max(const SPointer<Item>& r
 }
 
 template<class Data>
-SPointer<typename RBTree<Data>::Item> RBTree<Data>::_min(const SPointer<Item>& root) const {
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::_min(const SPointer<Item> root) const {
     SPointer<Item> n = root;
 
     while(n->l){
@@ -245,7 +248,7 @@ SPointer<typename RBTree<Data>::Item> RBTree<Data>::_min(const SPointer<Item>& r
 }
 
 template<class Data>
-SPointer<typename RBTree<Data>::Item> RBTree<Data>::search(const Data& key, const SPointer<Item>& root) const {
+SPointer<typename RBTree<Data>::Item> RBTree<Data>::search(const Data& key, SPointer<Item> root) const {
     if(!root || key == root->key) return root;
     else if (key < root->key) return search(key, root->l);
     else return search(key, root->r);
@@ -261,7 +264,7 @@ RBTree<Data>& RBTree<Data>::add(const Data& key){
 }
 
 template<class Data>
-void RBTree<Data>::insert(SPointer<Item>& x){
+void RBTree<Data>::insert(SPointer<Item> x){
     btInsert(x);
     x->red = true;
 
@@ -305,7 +308,7 @@ void RBTree<Data>::insert(SPointer<Item>& x){
 }
 
 template<class Data>
-void RBTree<Data>::btInsert(SPointer<Item>& n){
+void RBTree<Data>::btInsert(SPointer<Item> n){
     SPointer<Item> root = this->root;
     SPointer<Item> x;
 
@@ -367,7 +370,7 @@ void RBTree<Data>::inorderTreeWalk(const SPointer<Item>& n, int h)const {
         for(int i = h; i>0; i--){
             std::cout<<"->";
         }
-        std::cout<<n->key<<" ";
+        std::cout<<n->key<<" "<<n.get()<<" ";
         if(n->red) std::cout<<"red"<<std::endl;
         else std::cout<<"black"<<std::endl;
         inorderTreeWalk(n->r, h+1);
