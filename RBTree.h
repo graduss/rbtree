@@ -90,7 +90,7 @@ void RBTree<Data>::remove(SPointer<Item> node){
 
     if (y != node) node->key = y->key;
 
-    if(!y->red) {
+    if(!imaginaryX && !y->red) {
         rmoveFixup(x);
     }
     if (imaginaryX){
@@ -155,6 +155,7 @@ void RBTree<Data>::rmoveFixup(SPointer<Item> x){
             x = root;
         }
     }
+    x->red = false;
 }
 
 template<class Data>
@@ -370,7 +371,7 @@ void RBTree<Data>::inorderTreeWalk(const SPointer<Item>& n, int h)const {
         for(int i = h; i>0; i--){
             std::cout<<"->";
         }
-        std::cout<<n->key<<" "<<n.get()<<" ";
+        std::cout<<n->key<<"\t"<<n.get()<<"\t";
         if(n->red) std::cout<<"red"<<std::endl;
         else std::cout<<"black"<<std::endl;
         inorderTreeWalk(n->r, h+1);
@@ -396,11 +397,9 @@ template <class Data>
 RBTree<Data>::Item::~Item(){
     if(p){
         if(p->l == this) p->l = 0;
-        else p->r = 0;
+        else if(p->r == this) p->r = 0;
     }
 
-    if(l) delete &l;
-    if(r) delete &r;
     p = l = r = 0;
     red = false;
     key = 0;
