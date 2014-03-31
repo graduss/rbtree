@@ -1,4 +1,5 @@
 #include "smartpointer/SPointer.h"
+#include "exceptions/RBTreeException.h"
 #include <iostream>
 
 #ifndef RBTREE_H
@@ -60,7 +61,7 @@ private:
 template<class Data>
 RBTree<Data>& RBTree<Data>::del(const Data& key){
     SPointer<Item> node = search(key, root);
-    if(!node) throw "Nod found";
+    if(!node) throw RBTreeException(RBTreeException::NOT_FOUND);
     remove(node);
 
     return *this;
@@ -78,6 +79,7 @@ void RBTree<Data>::remove(SPointer<Item> node){
     else x = y->r;
     if(!x) {
         x = new Item;
+        if(!x) throw RBTreeException(RBTreeException::MEMORY_FAIL);
         imaginaryX = true;
     }
 
@@ -160,23 +162,23 @@ void RBTree<Data>::rmoveFixup(SPointer<Item> x){
 
 template<class Data>
 Data& RBTree<Data>::max() const {
-    if(!root) throw "Is empty!";
+    if(!root) throw RBTreeException(RBTreeException::IS_EMPTY);
     else return _max(root)->key;
 }
 
 template<class Data>
 Data& RBTree<Data>::min() const {
-    if(!root) throw "Is empty!";
+    if(!root) throw RBTreeException(RBTreeException::IS_EMPTY);
     else return _min(root)->key;
 }
 
 template<class Data>
 Data& RBTree<Data>::successor(const Data& key) const {
     SPointer<Item> node = search(key, root);
-    if(!node) throw "Not found";
+    if(!node) throw RBTreeException(RBTreeException::NOT_FOUND);
     else {
         SPointer<Item> sucnode = _successor(node);
-        if(!sucnode) throw "the node is extrim";
+        if(!sucnode) throw RBTreeException(RBTreeException::IS_EXTRIM);
         else return sucnode->key;
     }
 }
@@ -184,10 +186,10 @@ Data& RBTree<Data>::successor(const Data& key) const {
 template<class Data>
 Data& RBTree<Data>::predecessor(const Data& key) const {
     SPointer<Item> node = search(key, root);
-    if(!node) throw "Not found";
+    if(!node) throw RBTreeException(RBTreeException::NOT_FOUND);
     else {
         SPointer<Item> psucnode = _predecessor(node);
-        if(!psucnode) throw "the node is extrim";
+        if(!psucnode) throw RBTreeException(RBTreeException::IS_EXTRIM);
         else return psucnode->key;
     }
 }
@@ -258,8 +260,7 @@ SPointer<typename RBTree<Data>::Item> RBTree<Data>::search(const Data& key, SPoi
 template<class Data>
 RBTree<Data>& RBTree<Data>::add(const Data& key){
     SPointer<Item> n = new Item(key);
-    if(!n) throw "Mem Error";
-    //std::cout<<n->key;
+    if(!n) throw RBTreeException(RBTreeException::MEMORY_FAIL);
     insert(n);
     return *this;
 }
