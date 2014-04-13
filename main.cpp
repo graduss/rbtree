@@ -23,6 +23,12 @@ int main()
         rbd.add(1.5).add(0.7).add(12.5).add(1.258).add(12.465).add(25.4).add(14.23).add(13.565).add(15).show();
         rbd.del(0.7).show();
 
+        std::cout<<"\n*** iterator for INT ****\n";
+        Iterator<int> start = rb.begin();
+        while(start != rb.end()){
+            std::cout<<*(start++)<<"\n";
+        }
+
         std::cout<<"\n finish \n";
     }catch(std::exception& e){
         std::cout<<e.what()<<"\n";

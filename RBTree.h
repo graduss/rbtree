@@ -1,5 +1,6 @@
 #include "smartpointer/SPointer.h"
 #include "exceptions/RBTreeException.h"
+#include "iterator/iterator.h"
 #include <iostream>
 
 #ifndef RBTREE_H
@@ -21,6 +22,11 @@ public:
     Data& predecessor(const Data& key) const;
     Data& min() const;
     Data& max() const;
+
+    Iterator<Data> begin() const;
+    Iterator<Data> end() const;
+
+    bool isThere(const Data& key) const;
 
     /********** testing **************/
     void show() const;
@@ -55,9 +61,26 @@ private:
     /******* testing ***********/
     void inorderTreeWalk(const SPointer<Item>& n, int h = 0)const;
 };
+
 /*******
 ** RBTree
 **/
+template<class Data>
+Iterator<Data> RBTree<Data>::begin() const {
+    if(root) return Iterator<Data>(this->min(),this);
+    else return Iterator<Data>(Iterator<Data>::END,this);
+}
+
+template<class Data>
+Iterator<Data> RBTree<Data>::end() const {
+    return Iterator<Data>(Iterator<Data>::END,this);
+}
+
+template<class Data>
+bool RBTree<Data>::isThere(const Data& key) const {
+    return (bool)search(key, root);
+}
+
 template<class Data>
 RBTree<Data>& RBTree<Data>::del(const Data& key){
     SPointer<Item> node = search(key, root);

@@ -23,4 +23,8 @@ const char* RBTreeException::what() const throw() {
     }
 }
 
+const RBTreeException::e_types RBTreeException::getType() const {
+    return type;
+}
+
 }
