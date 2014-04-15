@@ -12,10 +12,10 @@ template <class Data>
 class RBTree {
 
 public:
-    RBTree(): root(0) {}
+    RBTree();
     ~RBTree();
 
-    RBTree& add(const Data& key);
+    /*RBTree& add(const Data& key);
     RBTree& del(const Data& key);
 
     Data& successor(const Data& key) const;
@@ -26,13 +26,15 @@ public:
     Iterator<Data> begin() const;
     Iterator<Data> end() const;
 
-    bool isThere(const Data& key) const;
+    bool isThere(const Data& key) const;*/
 
     /********** testing **************/
     void show() const;
 
 private:
-    struct Item{
+    class Private;
+    Private *p;
+    /*struct Item{
         Data key;
         bool red;
         SPointer<Item> l, r, p;
@@ -56,16 +58,43 @@ private:
     SPointer<Item> _successor(SPointer<Item> node) const;
     SPointer<Item> _predecessor(SPointer<Item> node) const;
 
-    SPointer<Item> search(const Data& key, SPointer<Item> root) const;
+    SPointer<Item> search(const Data& key, SPointer<Item> root) const;*/
 
     /******* testing ***********/
-    void inorderTreeWalk(const SPointer<Item>& n, int h = 0)const;
+    /*void inorderTreeWalk(const SPointer<Item>& n, int h = 0)const;*/
 };
 
+template<class Data>
+RBTree<Data>::RBTree(){
+    p = new Private();
+    if(!p) throw "Init Error";
+}
+
+template<class Data>
+RBTree<Data>::~RBTree(){
+    if(p) delete p;
+}
+/*template<class Data>
+class RBTree<Data>::Private{
+    public:
+    Private(): root(0) {}
+    ~Private();
+    struct Item{
+        Data key;
+        bool red;
+        SPointer<Item> l, r, p;
+
+        Item(const Data& k): key(k), red(false), l(0), r(0), p(0) {}
+        Item(const Item& i);
+        Item();
+        ~Item();
+    };
+    SPointer<Item> root;
+};*/
 /*******
 ** RBTree
 **/
-template<class Data>
+/*template<class Data>
 Iterator<Data> RBTree<Data>::begin() const {
     if(root) return Iterator<Data>(this->min(),this);
     else return Iterator<Data>(Iterator<Data>::END,this);
@@ -386,9 +415,9 @@ void RBTree<Data>::rightRotate(SPointer<Item> x){
 template<class Data>
 RBTree<Data>::~RBTree(){
     if(root) root = 0;
-}
+}*/
 /**************** testting **********************************/
-template<class Data>
+/*template<class Data>
 void RBTree<Data>::inorderTreeWalk(const SPointer<Item>& n, int h)const {
     if(n){
         inorderTreeWalk(n->l, h+1);
@@ -405,13 +434,13 @@ template<class Data>
 void RBTree<Data>::show() const {
     inorderTreeWalk(root);
     std::cout<<"************\n";
-}
+}*/
 /************************************************************/
 
 /*******
 **  Item
 **/
-template<class Data>
+/*template<class Data>
 RBTree<Data>::Item::Item(){
     red = false;
     l = r = p = 0;
@@ -436,7 +465,7 @@ RBTree<Data>::Item::Item(const Item& i){
     l = i.l;
     r = i.r;
     p = i.p;
-}
+}*/
 /************************************************************/
 };
 

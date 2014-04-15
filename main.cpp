@@ -6,7 +6,7 @@ int main()
 {
     try{
         RBTree<int> rb;
-        RBTree<double> rbd;
+        /*RBTree<double> rbd;
 
         std::cout<<"\n*** int ****\n";
         rb.add(11).add(14).add(15).add(4).add(7).add(25).add(5).show();
@@ -29,7 +29,7 @@ int main()
             std::cout<<*(start++)<<"\n";
         }
 
-        std::cout<<"\n finish \n";
+        std::cout<<"\n finish \n";*/
     }catch(std::exception& e){
         std::cout<<e.what()<<"\n";
     }
