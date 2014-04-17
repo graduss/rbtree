@@ -15,7 +15,6 @@ class RBTreeException : public std::exception
         RBTreeException& operator=(const RBTreeException& e);
         virtual const char* what() const throw();
         virtual const e_types getType() const;
-        //virtual ~RBTreeException();
     private:
         e_types type;
 };
